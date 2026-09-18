@@ -6,4 +6,4 @@ permissions:
   pull-requests: write
 jobs:
   automerge:
-    uses: museumwithnofrontiers/viewer-workflows/.github/workflows/dependabot-automerge.yml@v1.7.0
+    uses: museumwithnofrontiers/viewer-workflows/.github/workflows/dependabot-automerge.yml@v1.7.1
