@@ -6,9 +6,8 @@ on:
 permissions:
   contents: read
   issues: write
-  packages: read
 jobs:
   audit:
     # Nothing to audit from the template itself - see ci.yml.
     if: ${{ !endsWith(github.repository, '/website-template') }}
-    uses: museumwithnofrontiers/viewer-workflows/.github/workflows/audit-scheduled.yml@v1.7.0
+    uses: museumwithnofrontiers/viewer-workflows/.github/workflows/audit-scheduled.yml@v1.7.1

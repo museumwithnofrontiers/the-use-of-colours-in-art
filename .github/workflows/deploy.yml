@@ -4,11 +4,10 @@ on:
     branches: [main]
 permissions:
   contents: read
-  packages: read
   pages: write
   id-token: write
 jobs:
   deploy:
     # Nothing to deploy from the template itself - see ci.yml.
     if: ${{ !endsWith(github.repository, '/website-template') }}
-    uses: museumwithnofrontiers/viewer-workflows/.github/workflows/website-deploy-pages.yml@v1.7.0
+    uses: museumwithnofrontiers/viewer-workflows/.github/workflows/website-deploy-pages.yml@v1.7.1
