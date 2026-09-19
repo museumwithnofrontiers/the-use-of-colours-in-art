@@ -1,7 +1,6 @@
 import { computed } from 'vue'
 import {
-  byId, entityRef, mediaUrl, useCatalogueData,
-  projectName as coreProjectName, projectFamily as coreProjectFamily,
+  byId, entityRef, mediaUrl, projectLabel, useCatalogueData, useDataPackage,
 } from '@museumwnf/viewer-core'
 
 // The exhibition's records, read the one way every website reads them:
@@ -150,42 +149,37 @@ export function partnerObjectsRoute(partner, page = 1) {
 
 // ── Source projects ────────────────────────────────────────────────────────
 //
-// A member is borrowed from the MWNF project that originally published it,
-// and legacy names and colours that project on the item sheet and in the
-// results grid. `projectName`/`projectFamily` here are this exhibition's own
-// rule on top of viewer-core's shared tables (`core.project.*` and the
-// family-to-swatch map): a native member cites the exhibition's own title
-// rather than a project name, and colours it with the shared `EXH` family —
-// the one thing viewer-core cannot know, because the exhibition's own key
-// (`GalEx6`) and title are this deployment's, not a legacy project.
-const nativeProjectKey = computed(() => exhibition.value?.mwnf3_project_id ?? null)
+// A member is borrowed from the MWNF project that originally published it.
+// Epic #1727 phase 4: the name is now the data package's own
+// `manifest.projects` entry (populated by the importer/exporter, phases 1-2),
+// keyed by this record's `project_id` (a UUID) — not viewer-core's deprecated,
+// legacy-key-keyed `projectName()`/`projectFamily()`, and not this exhibition's
+// own project-key comparisons either. The manifest already names the
+// exhibition's own native project under its own uuid (the sibling `Collection`
+// the importer creates alongside every `Project` carries the same title), so
+// there is no special case here for a native member any more; the colour
+// swatch moved out entirely, to `dataset.config.js`'s `projectColors` map
+// (ItemSheet.vue), which is this exhibition's own editorial choice, same as
+// legacy's family classes were.
+const { manifest } = useDataPackage()
 
-// Some members have no `project_key` at all: they come from the Explore
+// Some members have no `project_id` at all: they come from the Explore
 // monuments database rather than from a project, which is why provenance has
-// to be read from the keyspace here instead of from the field. Legacy still
-// colours them — `#info-citation-link` carries an `Explore` class — and still
-// prints an empty project name, so its citation reads `"…" in , Museum With No
-// Frontiers, …` with a hole in it. The colour is reproduced; the empty name is
+// to be read from the keyspace here instead of from a field. Legacy still
+// coloured them — `#info-citation-link` carried an `Explore` class — and still
+// printed an empty project name, so its citation read `"…" in , Museum With No
+// Frontiers, …` with a hole in it. The colour is reproduced (ItemSheet.vue's
+// own `.mwnf-chip--Explore` rule, `src/styles/site.css`); the empty name is
 // not, because a label reading "for" with nothing after it is a rendering
 // fault rather than a faithful copy. The line is dropped instead.
-function isExploreRecord(item) {
+export function isExploreRecord(item) {
   return (item?.backward_compatibility ?? '').startsWith('mwnf3_explore:')
 }
 
-/** Legacy's `#info-project-name`. Empty when legacy leaves it empty. */
-export function projectName(item, t) {
-  const key = item?.project_key
-  if (!key) return ''
-  if (key === nativeProjectKey.value) return exhibitionTitle(defaultLang)
-  return coreProjectName(key, t)
-}
-
-/** Legacy's family class on `#info-citation-link`, for the colour swatch. */
-export function projectFamily(item) {
-  const key = item?.project_key
-  if (!key) return isExploreRecord(item) ? 'Explore' : ''
-  if (key === nativeProjectKey.value) return 'EXH'
-  return coreProjectFamily(key)
+/** Legacy's `#info-project-name`. `null` for a record with no project (the
+ * Explore case) or whose project the manifest does not name in `lang`. */
+export function projectName(item, lang = defaultLang) {
+  return projectLabel(manifest, item?.project_id, lang)
 }
 
 /** The exhibition's own per-language chrome text. */

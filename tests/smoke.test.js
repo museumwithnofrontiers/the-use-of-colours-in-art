@@ -5,7 +5,7 @@ import {
 } from '@museumwnf/viewer-core/testing'
 import { catalogues as sharedTexts } from '@museumwnf/viewer-i18n/exhibition'
 import ownTexts from '../locales/en.json'
-import config from '../src/dataset.config.js'
+import config, { noticeProjects, projectColors } from '../src/dataset.config.js'
 import manifest from '@museumwnf/the-use-of-colours-in-art-data'
 import partnerNamesEn from '@museumwnf/the-use-of-colours-in-art-data/translations/partners.en.json'
 import dynastyNamesEn from '@museumwnf/the-use-of-colours-in-art-data/translations/dynasties.en.json'
@@ -53,13 +53,18 @@ describe('website smoke test', () => {
 
   it('renders the item sheet on the composed record view', async () => {
     const [, items] = await loadEntities(['exhibition', 'items'])
-    const item = items.find((i) => i.project_key) ?? items[0]
+    const item = items.find((i) => i.project_id) ?? items[0]
     const { app, host } = await mountSite(`#/item/${item.id}`)
     await vi.waitFor(() => expect(host.querySelector('.mwnf-sheet__label')).not.toBeNull(), { timeout: 20000 })
     expect(host.querySelector('.mwnf-record')).not.toBeNull()
     expect(host.querySelector('.languages')).not.toBeNull()
     expect(host.querySelector('.related-content-container')).not.toBeNull()
-    if (item.project_key) expect(host.querySelector('.source-reference').textContent).toContain(item.project_key)
+    // The citation/"source database" name is the fixture manifest's own
+    // project entry now (epic #1727 phase 4), not the raw legacy project_key.
+    if (item.project_id) {
+      const projectName = manifest.projects?.[item.project_id]?.name?.en
+      if (projectName) expect(host.querySelector('.source-reference').textContent).toContain(projectName)
+    }
     // The glossary tool (metanull/water-in-islam#36) is unconditional — the
     // layout's own component, not local state, so every sheet carries it.
     expect(host.querySelector('.mwnf-glossary-tool')).not.toBeNull()
@@ -73,6 +78,46 @@ describe('website smoke test', () => {
     expect(creditLink.textContent.endsWith(`#/item/${item.id}`)).toBe(true)
     app.unmount()
   }, 60000)
+
+  // Epic #1727 phase 4: the "search the related database" link, the
+  // Artistic Introduction link and the Explore-partner notice are gated on
+  // the fixture manifest's own `manifest.projects` entry for this record's
+  // `project_id`, not a hardcoded legacy project key — one sheet per project
+  // this build actually references, so every gate value the fixture carries
+  // is exercised at least once (a `null` URL, e.g. an as-yet-unpopulated one,
+  // is exactly as provable an absence as a non-null one is a presence).
+  it('gates the related-database link, the Artistic Introduction link and the Explore-partner notice on the manifest project', async () => {
+    const [, items] = await loadEntities(['exhibition', 'items'])
+    const seen = new Set()
+    const sample = items.filter((i) => {
+      if (!i.project_id || seen.has(i.project_id) || !manifest.projects?.[i.project_id]) return false
+      seen.add(i.project_id)
+      return true
+    })
+    expect(sample.length).toBeGreaterThan(0)
+
+    for (const item of sample) {
+      const proj = manifest.projects[item.project_id]
+      const { app, host } = await mountSite(`#/item/${item.id}`)
+      await vi.waitFor(() => expect(host.querySelector('.related-content-container')).not.toBeNull(), { timeout: 20000 })
+
+      expect(!!host.querySelector('.related-database')).toBe(!!proj.related_database_url)
+      if (proj.related_database_url) {
+        expect(host.querySelector('.related-database a').getAttribute('href')).toBe(proj.related_database_url)
+      }
+      expect(!!host.querySelector('.artistic-introduction')).toBe(!!proj.artistic_introduction_url)
+      if (proj.artistic_introduction_url) {
+        expect(host.querySelector('.artistic-introduction a').getAttribute('href')).toBe(proj.artistic_introduction_url)
+      }
+      expect(!!host.querySelector('.info-eiac')).toBe(noticeProjects.includes(item.project_id))
+      // The chip colour is this build's own `projectColors` map, keyed the
+      // same way — every project the fixture carries must have an entry, or
+      // the chip silently falls back to viewer-layout's default swatch.
+      expect(projectColors[item.project_id]).toBeTruthy()
+
+      app.unmount()
+    }
+  }, 120000)
 
   // The dynasty popouts (metanull/water-in-islam#36) are DynastyList/
   // DynastyPopout from the layout, fed the raw dynasty records legacy's own

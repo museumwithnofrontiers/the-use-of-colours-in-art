@@ -1,24 +1,25 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
 import { RouterLink } from 'vue-router'
-import { NotFoundView, useI18n, useSiteConfig } from '@museumwnf/viewer-core'
+import { NotFoundView, useI18n, useProjects, useSiteConfig } from '@museumwnf/viewer-core'
 import {
   BackLink, DynastyList, GlossaryTool, RecordLanguages, RelatedRecords, SheetSection,
 } from '@museumwnf/viewer-layout/content'
 import { RecordView } from '@museumwnf/viewer-layout/views'
 import {
   labelOf, partnerById, partnerRoute, dynastyById, translations, defaultLang, md, itemById,
-  projectName as projectNameOf, projectFamily, isHiddenPartner,
+  isHiddenPartner, isExploreRecord,
 } from '../composables/useExhibitionData.js'
 import { findEvents, eraLabel, roundOutward, timelineCountries, countryIdForCode, hasTimeline } from '../composables/useTimeline.js'
 import { itemSheet } from '../composables/sheet.js'
+import { noticeProjects, projectColors } from '../dataset.config.js'
 
 // The item sheet is the platform's composed record page, rendering the spec
 // in composables/sheet.js: the record's language and loads, the glossary
 // terms and the click on one, the rows, the gallery, the credits, the
 // citation and the related records are the view's. What this page owns
 // fills the view's slots — the blocks only an exhibition has: the source
-// database by project family, the portal links, the timeline tool behind the
+// database name and colour, the portal links, the timeline tool behind the
 // `hasTimeline` gate, the cross-references to sibling sites, and the print
 // action. The glossary tool and the dynasty popouts are the layout's own
 // content components (GlossaryTool, DynastyList) — this page just feeds
@@ -35,16 +36,33 @@ const props = defineProps({ id: { type: String, required: true } })
 
 const { t } = useI18n()
 const { links } = useSiteConfig()
+// Epic #1727 phase 4: the source project's name and its "related database" /
+// Artistic Introduction links come from the data package's own
+// `manifest.projects` entry (viewer-core's `useProjects()`), keyed by this
+// record's `project_id` — not from a hardcoded set of legacy project keys.
+const { label: sourceLabel, links: projectLinks } = useProjects()
 
 const item = computed(() => itemById.value.get(props.id) ?? null)
 const era = (year) => eraLabel(year, t)
 
-// The projects legacy offers a "search the related database" link for. DCA is
-// deliberately not among them: legacy has no public DCA database search to
-// point at, so a DCA-sourced member gets no such link at all.
-const RELATED_DATABASE_PROJECTS = new Set(['ISL', 'EPM', 'DBA', 'BAR', 'AWE', 'awe'])
-const hasRelatedDatabase = (record) => RELATED_DATABASE_PROJECTS.has(record.project_key)
-const showEiacNotice = (record) => record.project_key === 'EPM'
+// The Explore-partner notice has no manifest field of its own — which
+// projects still get it is this exhibition's own editorial choice
+// (`dataset.config.js`'s `noticeProjects`, one list shared verbatim with the
+// sibling water-in-islam).
+const showEiacNotice = (record) => noticeProjects.includes(record.project_id)
+
+// This item's chip colour: `dataset.config.js`'s `projectColors`, a static
+// map from project UUID to one of this site's own `mwnf-chip--<name>`
+// classes (`src/styles/site.css` — not viewer-layout's shared, legacy-key-
+// named family classes, which this exhibition no longer uses), or the
+// `explore` class for a record with no project at all (`isExploreRecord`,
+// useExhibitionData.js).
+const chipFamily = (record) => projectColors[record.project_id] ?? (isExploreRecord(record) ? 'explore' : null)
+// `related_items` references from the exporter carry only the legacy
+// project_key, not project_id yet (TODO(#1727): platform gap, reported on
+// the epic — the exporter's related_items entries need project_id too), so a
+// reference outside this exhibition can resolve the `explore` case only.
+const referenceFamily = (ref) => (isExploreRecord(ref) ? 'explore' : null)
 
 // ── Related content ───────────────────────────────────────────────────────
 //
@@ -132,12 +150,14 @@ function printSheet() {
       <div class="links-container">
         <!-- Decision Q3: legacy's `remote-object` URL came from a
              hand-maintained table with no counterpart in the new model, so
-             the source is named, not linked. The chip is keyed by project
-             FAMILY, as legacy's `#info-citation-link` class is, and the
-             source line is dropped when legacy has no project name to print. -->
-        <p class="source-reference" v-if="projectFamily(record)">
-          <span class="mwnf-chip" :class="`mwnf-chip--${projectFamily(record)}`">{{ record.project_key || projectFamily(record) }}</span>
-          <template v-if="projectNameOf(record, t)">{{ t('record.sheet.sourceDatabase') }}: {{ projectNameOf(record, t) }}</template>
+             the source is named, not linked. The chip is a colour swatch only
+             now (its own name is announced right next to it below, so a
+             second copy of the same text inside it would be redundant) — the
+             source line is dropped when the manifest has no project name to
+             print. -->
+        <p class="source-reference" v-if="chipFamily(record)">
+          <span class="mwnf-chip" :class="`mwnf-chip--${chipFamily(record)}`" aria-hidden="true"></span>
+          <template v-if="sourceLabel(record.project_id)">{{ t('record.sheet.sourceDatabase') }}: {{ sourceLabel(record.project_id) }}</template>
         </p>
         <p class="source-uid"><code>{{ record.backward_compatibility }}</code></p>
         <p class="add-collection-link">
@@ -165,17 +185,20 @@ function printSheet() {
           <!-- Related items this exhibition does not ship: the reference it is, awaiting a resolver. -->
           <ul v-if="relatedOutsideRefs(records, outside, record).length" class="reference-list">
             <li v-for="r in relatedOutsideRefs(records, outside, record)" :key="r.id">
-              <span class="mwnf-chip" :class="`mwnf-chip--${projectFamily(r)}`">{{ r.project_key || projectFamily(r) }}</span>
+              <span class="mwnf-chip" :class="referenceFamily(r) ? `mwnf-chip--${referenceFamily(r)}` : null">{{ r.project_key }}</span>
               <code>{{ r.backward_compatibility }}</code>
               <span class="unresolved-note">{{ $t('exhibition.results.notInThisExhibition') }}</span>
             </li>
           </ul>
         </RelatedRecords>
 
-        <!-- Artistic Introduction — an Islamic Art site feature legacy linked from ISL/EPM sheets. -->
-        <div v-if="record.project_key === 'ISL' || record.project_key === 'EPM'">
+        <!-- Artistic Introduction — an Islamic Art site feature legacy linked
+             from a Discover Islamic Art / Explore Islamic Art Collections
+             sheet, now the manifest's own URL for this record's project,
+             rendered iff it has one. -->
+        <div class="artistic-introduction" v-if="projectLinks(record.project_id)?.artisticIntroductionUrl">
           <p class="related-line">
-            <a :href="`${links.islamicArt}/gai/ISL/`" target="_blank" rel="noopener">↗ {{ t('exhibition.nav.artisticIntroduction') }}</a>
+            <a :href="projectLinks(record.project_id).artisticIntroductionUrl" target="_blank" rel="noopener">↗ {{ t('exhibition.nav.artisticIntroduction') }}</a>
           </p>
         </div>
 
@@ -248,17 +271,15 @@ function printSheet() {
           </div>
         </div>
 
-        <!-- Search related database: the gate is on the block, as legacy's was. -->
-        <div v-if="hasRelatedDatabase(record)">
+        <!-- Search related database: the gate is on the block, as legacy's
+             was — now the manifest's own related-database URL for this
+             record's project (a null URL, e.g. DCA's, means no link, exactly
+             as an absent legacy key used to), and the link's label is the
+             same project name the citation above prints. -->
+        <div class="related-database" v-if="projectLinks(record.project_id)?.relatedDatabaseUrl">
           <p class="related-header">{{ t('exhibition.search.relatedDatabase') }}</p>
-          <p class="related-line" v-if="record.project_key === 'ISL' || record.project_key === 'EPM'">
-            <a :href="`${links.islamicArt}/database.php`" target="_blank" rel="noopener">↗ {{ $t('core.project.islamicArt') }}</a>
-          </p>
-          <p class="related-line" v-if="record.project_key === 'DBA' || record.project_key === 'BAR'">
-            <a :href="`${links.baroqueArt}/database.php`" target="_blank" rel="noopener">↗ {{ $t('core.project.baroqueArt') }}</a>
-          </p>
-          <p class="related-line" v-if="record.project_key === 'AWE' || record.project_key === 'awe'">
-            <a :href="`${links.sharingHistory}/database.php`" target="_blank" rel="noopener">↗ {{ $t('core.project.sharingHistory') }}</a>
+          <p class="related-line">
+            <a :href="projectLinks(record.project_id).relatedDatabaseUrl" target="_blank" rel="noopener">↗ {{ sourceLabel(record.project_id) }}</a>
           </p>
         </div>
 

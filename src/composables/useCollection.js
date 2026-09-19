@@ -122,13 +122,14 @@ export function haystack(item, text) {
 /**
  * A record as viewer-layout's grid contract: the thumbnail, the name, the
  * lines legacy's hover card carried (date, holder, place, source project).
- * The project name is this exhibition's own rule — the exhibition's title
- * for a native member, nothing for a record legacy left nameless — so the
- * line is dropped, not printed with a hole in it.
+ * The project name is the manifest's own (epic #1727 phase 4), read in the
+ * same `defaultLang` every other line of this tile is — nothing for a record
+ * legacy left nameless (the Explore case), so the line is dropped, not
+ * printed with a hole in it.
  */
 export function tile(item, t) {
   const text = tr('items', item.id, defaultLang)
-  const project = projectName(item, t)
+  const project = projectName(item, defaultLang)
   return {
     id: item.id,
     image: item.images?.[0]?.url ?? '',
