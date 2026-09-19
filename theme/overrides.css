@@ -92,3 +92,22 @@
    for a different purpose, so prose keeps its own. No token expresses a
    prose-link colour independent of the accent, hence the escape hatch. */
 .mwnf-prose a { color: var(--link-blue); }
+
+/* ── Source-project chip colours (epic #1727 phase 4) ──────────────────────
+   ItemSheet.vue's own `mwnf-chip--<name>` classes, one per project family —
+   the site's own content style (designer-contract.md role 3), replacing
+   viewer-layout's shared `mwnf-chip--<family>` classes (content.css), which
+   this exhibition no longer uses now that a family is a `dataset.config.js`
+   `projectColors` lookup by project UUID, not a legacy-key-keyed one. The
+   `Explore` case is the one family the manifest cannot name (a member with
+   no `project_id` at all, sourced from the Explore monuments database rather
+   than from a project — `isExploreRecord` in useExhibitionData.js); legacy
+   still coloured it, on `#info-citation-link`'s `Explore` class. */
+.mwnf-chip--islamic-art     { background-color: var(--dia-yellow);     color: #000000; }
+.mwnf-chip--baroque-art     { background-color: var(--dba-blue);       color: #ffffff; }
+.mwnf-chip--sharing-history { background-color: var(--sh-red);         color: #ffffff; }
+.mwnf-chip--carpet-art      { background-color: var(--dca-tan);        color: #ffffff; }
+.mwnf-chip--glass-art       { background-color: var(--dga-blue);       color: #ffffff; }
+.mwnf-chip--galleries       { background-color: var(--g-grey);         color: #ffffff; }
+.mwnf-chip--exhibition      { background-color: var(--exhibitions);    color: #ffffff; }
+.mwnf-chip--explore         { background-color: var(--explore-green); color: #ffffff; }
