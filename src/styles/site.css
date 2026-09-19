@@ -5,8 +5,8 @@
  *
  * The building blocks themselves — panels, selects, buttons, prose, back
  * bars, loaders, the project chips proper — are viewer-layout's content
- * classes (`.mwnf-*`, see its README's "Content classes" table); this file
- * no longer carries copies of them.
+ * classes (the `mwnf-` prefixed ones, see its README's "Content classes"
+ * table); this file no longer carries copies of them.
  *
  * Page chrome — header, banner, navigation, footer surfaces — is themed
  * through theme/tokens.css instead; this file is the website's own content
@@ -46,7 +46,7 @@
      per family. The table is the platform's, not this exhibition's: which
      projects it borrows from is a property of the export and moves with every
      reimport, so all of them are declared. These feed viewer-layout's
-     `.mwnf-chip--<family>` through its own `--mwnf-project-*` tokens, below —
+     an `mwnf-chip--<family>` class through its own `--mwnf-project-*` tokens, below —
      the mapping from a project key to a family is still `projectFamily()` in
      useExhibitionData.js. */
   --dia-yellow:    #ffcc00;  /* Discover Islamic Art (ISL / EPM) */
@@ -105,12 +105,7 @@ a { color: inherit; }
    A member with no `project_key` at all is sourced from the Explore
    monuments database rather than from a project (`isExploreRecord` in
    useExhibitionData.js); legacy still colours it, on `#info-citation-link`'s
-   `Explore` class. The shared package's `.mwnf-chip--<family>` rules stop at
-   the seven platform families, so this one stays here. */
+   `Explore` class. The shared package's `mwnf-chip--<family>` classes stop
+   at the seven platform families, so this one stays here (epic #1727 phase 4
+   owns replacing this mechanism). */
 .mwnf-chip--Explore { background-color: var(--explore-green); color: #fff; }
-
-/* Legacy's content links are blue; viewer-layout's `.mwnf-prose a` reads the
-   shared `--mwnf-color-accent` instead, which this exhibition already uses
-   for navigation and buttons in its own contrast tone — a different colour
-   for a different purpose, so prose keeps its own. */
-.mwnf-prose a { color: var(--link-blue); }
