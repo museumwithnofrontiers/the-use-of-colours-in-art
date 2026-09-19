@@ -15,6 +15,37 @@ import { creditsSpec } from './composables/textPageSpecs.js'
 
 const { manifest } = useDataPackage()
 
+// ── Source-project site config (epic #1727 phase 4) ─────────────────────────
+//
+// Per-project-UUID editorial choices ItemSheet.vue makes about a borrowed
+// item's source: which colour swatch its chip uses (one of the site's own
+// `mwnf-chip--<name>` classes, `src/styles/site.css` — not viewer-layout's
+// shared `mwnf-chip--<family>` vocabulary, `content.css`, which named its
+// families after legacy project keys and which this exhibition no longer
+// keys anything off), and which projects still get the Explore-partner
+// notice legacy showed on the sheet. Both keyed by project UUID, read from
+// this package's own `manifest.projects`
+// (`npm pack @museumwnf/the-use-of-colours-in-art-data`) — never the legacy
+// project key, which this exhibition no longer reads. Shared verbatim with
+// the sibling water-in-islam; that package's own UUIDs differ, so its copy
+// of these two maps is ported by hand, not copied.
+export const projectColors = {
+  '61c122ac-ea86-5462-8bab-6b86138c49b2': 'islamic-art', // Discover Islamic Art
+  '928f5e0d-53e3-5f53-b9c2-5af389c30dd4': 'islamic-art', // Explore Islamic Art Collections
+  '76eaf6c2-8025-53bc-9e39-106803a3917e': 'baroque-art', // Discover Baroque Art
+  '0f031e22-6dc6-5ce6-b94b-9bb88345140c': 'sharing-history', // Sharing History
+  'dcf7b4d2-03c8-568a-8209-2817950fe05e': 'carpet-art', // Discover Carpet Art
+  'ad963031-4a8c-5d06-b797-b7cfc772e3c0': 'glass-art', // Discover Glass Art
+  'a0817323-79ca-53fc-95ac-9f65ee2fcbac': 'galleries', // MWNF Galleries
+  '08eff25c-24af-5d7d-8635-18ea15aca879': 'exhibition', // The Use Of Colours In Art (this exhibition's own native project)
+}
+
+// Legacy's Explore-partner notice, shown only on a sheet borrowed from
+// Explore Islamic Art Collections.
+export const noticeProjects = [
+  '928f5e0d-53e3-5f53-b9c2-5af389c30dd4', // Explore Islamic Art Collections
+]
+
 // The languages this exhibition publishes (`exhibition_i18n.enabled`, declared
 // by the package as `site.languages`), kept where the item translations
 // actually carry them. An item sheet may offer more — whatever languages the

@@ -93,10 +93,11 @@ export const itemSheet = {
   citation: {
     permalink: false,
     heading: 'record.citation.ofThisPage',
-    // Legacy's `#info-project-name`, not viewer-core's generic project-key
-    // lookup: a native member cites the exhibition's own title, a record
-    // legacy left nameless (the Explore monuments database) cites nothing.
-    project: (record, { t }) => projectName(record, t),
+    // Legacy's `#info-project-name`: the manifest's own project name for this
+    // record (epic #1727 phase 4), read in the record's own display language,
+    // not the site's active one — a record legacy left nameless (the Explore
+    // monuments database) still cites nothing.
+    project: (record, { language }) => projectName(record, language),
   },
   related: {
     variant: 'grid',
