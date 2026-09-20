@@ -1,4 +1,4 @@
-import { createViewer, mergeMessages } from '@museumwnf/viewer-core'
+import { createStandardViewer } from '@museumwnf/viewer-core'
 import { catalogues as sharedTexts } from '@museumwnf/viewer-i18n/exhibition'
 import '@museumwnf/viewer-layout/style.css'
 import '../theme/tokens.css'
@@ -15,4 +15,4 @@ for (const [path, module] of Object.entries(localeFiles)) {
   ownTexts[lang] = module.default
 }
 
-createViewer({ ...config, messages: mergeMessages(sharedTexts, ownTexts) }).mount('#app')
+createStandardViewer(config, undefined, { dictionary: sharedTexts, ownMessages: ownTexts })
