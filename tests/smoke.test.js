@@ -64,7 +64,7 @@ describe('website smoke test', () => {
     // own `related-content-container`/`source-reference` classes.
     expect(host.querySelector('.mwnf-sheet-related')).not.toBeNull()
     // The citation/"source database" name is the fixture manifest's own
-    // project entry now (epic #1727 phase 4), not the raw legacy project_key.
+    // project entry now (epic #1727 phase 4), not a legacy project code.
     if (item.project_id) {
       const projectName = manifest.projects?.[item.project_id]?.name?.en
       if (projectName) expect(host.querySelector('.mwnf-sheet-source__line').textContent).toContain(projectName)
