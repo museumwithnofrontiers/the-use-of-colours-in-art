@@ -47,8 +47,7 @@ export const { FACETS, haystack, tile, collectionResults, countryIdForCode, tagL
 // ── The timeline spec (was useTimeline.js) ──────────────────────────────────
 // `countryIdForCode` is renamed on the way out: the catalogue spec above
 // already claims that name for its own, different function, and only
-// ItemSheet.vue reads the timeline's — aliased back to `countryIdForCode` on
-// the way in there (its own import line only), so its script stays unchanged.
+// composables/sheet.js reads the timeline's.
 export const {
   usesLocalTimeline, hasTimeline, timelineCountries, timelineCountryName,
   countryIdForCode: timelineCountryIdForCode,
