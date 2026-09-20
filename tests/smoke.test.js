@@ -167,8 +167,10 @@ describe('website smoke test', () => {
     await vi.waitFor(() => expect(host.querySelector('.mwnf-record')).not.toBeNull(), { timeout: 20000 })
     expect(host.textContent).toContain(partnerNamesEn[partner.id].name)
     // The Description/Contact/Logo tab strip and the OpenStreetMap embed are
-    // this page's own slots — no local language switcher or lightbox remains.
-    expect(host.querySelector('#partner-links')).not.toBeNull()
+    // this page's own slots — no local language switcher or lightbox
+    // remains. `#partner-links` is `.mwnf-dxa-profile-links` since epic
+    // #1731 (@museumwnf/viewer-layout/dxa's `ExhibitionPartnerProfile`).
+    expect(host.querySelector('.mwnf-dxa-profile-links')).not.toBeNull()
     expect(host.querySelector('.mwnf-partner-map')).not.toBeNull()
     app.unmount()
   }, 30000)

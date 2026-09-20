@@ -3,6 +3,7 @@ import {
 } from '@museumwnf/viewer-core'
 import { itemFromUidPath, partnerFromKey } from '@museumwnf/viewer-core/legacy'
 import { TextPageView } from '@museumwnf/viewer-layout/views'
+import { standardRoutes } from '@museumwnf/viewer-layout/dxa'
 import SiteShell from './SiteShell.vue'
 import { countries, items, visiblePartners, hasTimeline } from './composables/exhibitionData.js'
 import { creditsSpec } from './composables/textPageSpecs.js'
@@ -232,13 +233,6 @@ export default {
       component: () => import('./views/ThemeGallery.vue'),
       meta: meta('themes', 'themes'),
     },
-    { path: '/collection', name: 'collection', component: () => import('./views/CollectionSearch.vue'), meta: meta('collection', 'tags') },
-    {
-      path: '/collection-results',
-      name: 'collection-results',
-      component: () => import('./views/CollectionResults.vue'),
-      meta: meta('collection', 'tags', 'timelines'),
-    },
     {
       path: '/item/:id',
       name: 'item',
@@ -247,42 +241,25 @@ export default {
       props: (route) => ({ id: route.params.id }),
       meta: meta('database', 'languages', 'dynasties', 'glossary', 'timelines', 'timeline_events'),
     },
-    { path: '/search', name: 'search-results', component: () => import('./views/SearchResults.vue'), meta: meta('database') },
-    { path: '/how-to-search', name: 'search-how-to', component: () => import('./views/SearchHowTo.vue'), meta: meta('database') },
-    { path: '/partners', name: 'partners', component: () => import('./views/Partners.vue'), meta: meta('partners') },
-    { path: '/partner/:id', name: 'partner', component: () => import('./views/PartnerProfile.vue'), meta: meta('partners', 'languages') },
-    {
-      path: '/partner/:id/objects',
-      name: 'partner-objects',
-      component: () => import('./views/PartnerObjects.vue'),
-      meta: meta('partners'),
-    },
-    {
-      path: '/institution/:id',
-      name: 'institution',
-      component: () => import('./views/InstitutionProfile.vue'),
-      meta: meta('partners', 'languages'),
-    },
-    {
-      path: '/institution/:id/monuments',
-      name: 'institution-monuments',
-      component: () => import('./views/InstitutionMonuments.vue'),
-      meta: meta('partners'),
-    },
+    // The 11 standard pages this exhibition shares byte-for-byte with
+    // water-in-islam (epic #1731): search, the partner list/profile/objects
+    // and their institution variants, the timeline results/gallery and the
+    // collection entrance/results. Names, paths and `meta` are pinned to
+    // what this site always registered — see the smoke test's `checkRoutes`
+    // assertion below. `texts` carries the five entry names that were never
+    // shared across DXA exhibitions (read off this site's own, now-retired
+    // PartnerObjects.vue/InstitutionMonuments.vue).
+    ...standardRoutes('exhibition', {
+      partnerObjects: {
+        emptyPartner: 'colours.partnerObjects.emptyPartner',
+        emptyInstitution: 'colours.partnerObjects.emptyInstitution',
+        institutionSummary: 'colours.partner.monumentsInExhibition',
+        partnerProfileLabel: 'colours.partnerObjects.partnerProfile',
+        institutionProfileLabel: 'colours.partnerObjects.institutionProfile',
+      },
+    }),
     { path: '/related', name: 'related', component: () => import('./views/RelatedContent.vue'), meta: meta('related', 'related_content') },
     { path: '/timeline', name: 'timeline', component: () => import('./views/Timeline.vue'), meta: meta('timeline', 'timelines', 'timeline_events') },
-    {
-      path: '/timeline-results',
-      name: 'timeline-results',
-      component: () => import('./views/TimelineResults.vue'),
-      meta: meta('timeline', 'timelines', 'timeline_events'),
-    },
-    {
-      path: '/timeline/gallery',
-      name: 'timeline-gallery',
-      component: () => import('./views/TimelineGallery.vue'),
-      meta: meta('timeline', 'timelines', 'timeline_events'),
-    },
     // No local Credits.vue: legacy's Credits page is a heading (the shell's
     // own `sectionTitles`), a body and a back link, exactly `TextPageView`'s
     // shape (`creditsSpec`, composables/textPageSpecs.js).
