@@ -16,8 +16,9 @@ const { manifest } = useDataPackage()
 
 // ── Source-project site config (epic #1727 phase 4) ─────────────────────────
 //
-// Per-project-UUID editorial choices ItemSheet.vue makes about a borrowed
-// item's source: which colour swatch its chip uses (one of the site's own
+// Per-project-UUID editorial choices composables/sheet.js makes about a
+// borrowed item's source, on top of RecordSheetView's own spec keys (epic
+// #1728): which colour swatch its chip uses (one of the site's own
 // `mwnf-chip--<name>` classes, `src/styles/site.css` — not viewer-layout's
 // shared `mwnf-chip--<family>` vocabulary, `content.css`, which named its
 // families after legacy project keys and which this exhibition no longer

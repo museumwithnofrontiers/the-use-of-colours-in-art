@@ -111,3 +111,33 @@
 .mwnf-chip--galleries       { background-color: var(--g-grey);         color: #ffffff; }
 .mwnf-chip--exhibition      { background-color: var(--exhibitions);    color: #ffffff; }
 .mwnf-chip--explore         { background-color: var(--explore-green); color: #ffffff; }
+
+/* ── The item sheet's two-column layout (epic #1728) ────────────────────────
+   Legacy's DatabaseItem.vue, and this exhibition's own ItemSheet.vue after
+   it, laid the sheet out in two columns — the photos on the left, the field
+   sheet on the right, the related-content block spanning both — over
+   RecordSheetView's single flowing column. That shape is a purely visual
+   choice no `spec` key or slot exists for (it is not a block, it is where
+   the blocks sit), so it stays here rather than in a component style block:
+   `.mwnf-record__main`'s own children are viewer-layout's, addressed by the
+   same classes content.css itself styles their insides with. */
+.database-page { background: #ffffff; width: 100%; min-height: 400px; }
+
+.database-page .languages { background: var(--rule-grey); padding: 6px 20px; }
+
+.database-page .mwnf-record__body { padding: 0 20px 30px; }
+.database-page .mwnf-record__main {
+  display: grid;
+  grid-template-columns: 42% minmax(0, 1fr);
+  column-gap: 26px;
+  align-items: start;
+}
+.database-page .mwnf-record__main > * { grid-column: 2; }
+.database-page .mwnf-record__main > .mwnf-media { grid-column: 1; grid-row: 1 / span 12; }
+.database-page .mwnf-record__main > .mwnf-sheet-related { grid-column: 1 / -1; }
+
+.database-page .mwnf-sheet__value a { color: var(--link-blue); }
+
+@media only screen and (max-width: 849px) {
+  .database-page .mwnf-record__main { display: block; }
+}

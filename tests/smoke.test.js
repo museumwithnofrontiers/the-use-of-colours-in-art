@@ -58,12 +58,16 @@ describe('website smoke test', () => {
     await vi.waitFor(() => expect(host.querySelector('.mwnf-sheet__label')).not.toBeNull(), { timeout: 20000 })
     expect(host.querySelector('.mwnf-record')).not.toBeNull()
     expect(host.querySelector('.languages')).not.toBeNull()
-    expect(host.querySelector('.related-content-container')).not.toBeNull()
+    // RecordSheetView (viewer-layout 2.14.0) renders the related block under
+    // its own `mwnf-sheet-related` class, and the source line under
+    // `mwnf-sheet-source__line` — this site no longer wraps either in its
+    // own `related-content-container`/`source-reference` classes.
+    expect(host.querySelector('.mwnf-sheet-related')).not.toBeNull()
     // The citation/"source database" name is the fixture manifest's own
     // project entry now (epic #1727 phase 4), not the raw legacy project_key.
     if (item.project_id) {
       const projectName = manifest.projects?.[item.project_id]?.name?.en
-      if (projectName) expect(host.querySelector('.source-reference').textContent).toContain(projectName)
+      if (projectName) expect(host.querySelector('.mwnf-sheet-source__line').textContent).toContain(projectName)
     }
     // The glossary tool (metanull/water-in-islam#36) is unconditional — the
     // layout's own component, not local state, so every sheet carries it.
@@ -99,17 +103,16 @@ describe('website smoke test', () => {
     for (const item of sample) {
       const proj = manifest.projects[item.project_id]
       const { app, host } = await mountSite(`#/item/${item.id}`)
-      await vi.waitFor(() => expect(host.querySelector('.related-content-container')).not.toBeNull(), { timeout: 20000 })
+      await vi.waitFor(() => expect(host.querySelector('.mwnf-sheet-related')).not.toBeNull(), { timeout: 20000 })
 
-      expect(!!host.querySelector('.related-database')).toBe(!!proj.related_database_url)
-      if (proj.related_database_url) {
-        expect(host.querySelector('.related-database a').getAttribute('href')).toBe(proj.related_database_url)
-      }
-      expect(!!host.querySelector('.artistic-introduction')).toBe(!!proj.artistic_introduction_url)
-      if (proj.artistic_introduction_url) {
-        expect(host.querySelector('.artistic-introduction a').getAttribute('href')).toBe(proj.artistic_introduction_url)
-      }
-      expect(!!host.querySelector('.info-eiac')).toBe(noticeProjects.includes(item.project_id))
+      // RecordSheetView's related-database/Artistic-Introduction lines carry
+      // no block class of their own (`mwnf-sheet-related__line` is shared by
+      // several lines), so presence is asserted on the link's own href
+      // instead — a stricter check than the old class-presence one, and one
+      // that (unlike it) still fails if the href were ever wrong.
+      expect(!!host.querySelector(`a[href="${proj.related_database_url}"]`)).toBe(!!proj.related_database_url)
+      expect(!!host.querySelector(`a[href="${proj.artistic_introduction_url}"]`)).toBe(!!proj.artistic_introduction_url)
+      expect(!!host.querySelector('.mwnf-sheet-notice')).toBe(noticeProjects.includes(item.project_id))
       // The chip colour is this build's own `projectColors` map, keyed the
       // same way — every project the fixture carries must have an entry, or
       // the chip silently falls back to viewer-layout's default swatch.
