@@ -254,6 +254,11 @@ describe('website smoke test', () => {
     app.unmount()
   }, 30000)
 
+  // PictureGallery/PictureNarrative (viewer-layout 2.14.0, story #1811/#1729)
+  // now fill the panel/thumbnails/after-body slots this family's own
+  // Theme.vue used to build by hand — the class names below
+  // (`mwnf-picture-gallery__*`/`mwnf-picture-narrative__*`) are the shared
+  // components' own, not this site's former `theme-component-*` markup.
   it('renders a theme on the composed essay view', async () => {
     const [, , , themes] = await loadEntities(['exhibition', 'items', 'partners', 'themes'])
     const theme = themes.find((t) => t.id === '1')
@@ -263,8 +268,18 @@ describe('website smoke test', () => {
     // The Roman label sits beside the theme's own title, in the `#header` slot.
     expect(host.querySelector('.theme-component-theme-title').textContent).toMatch(/[IVX]/)
     expect(host.querySelector('.mwnf-essay__side')).not.toBeNull()
-    expect(host.querySelector('.theme-component-selected-container, .theme-component-no-images')).not.toBeNull()
+    expect(host.querySelector('.mwnf-picture-gallery__selected, .mwnf-picture-gallery__empty')).not.toBeNull()
     expect(host.querySelector('.mwnf-essay__nav')).not.toBeNull()
+    // The selected picture's own caption: its panel title is the parent
+    // record's label (composables/useThemePictures.js's `resolvePicture`),
+    // not the theme node's own presentation text.
+    expect(host.querySelector('.mwnf-picture-gallery__detail--title').textContent)
+      .toContain('Church of St. Lourenço de Almancil')
+    // The sub-theme tab strip (`#navigation`, still this site's own — see
+    // themeSpecs.js's `numbering: false` comment).
+    const subNav = host.querySelector('.theme-component-link-navigation-container')
+    expect(subNav.textContent).toContain('The Basics – getting to know the Primary Colours')
+    expect(subNav.textContent).toContain('Primary Colours in Architectural Monuments')
     // The view reads the theme texts through the tree's own entity, and a wrong
     // entity renders internal names or nothing. viewer-core 1.12.1 exposes
     // `tree.entity` and `tree.source` as strings.
@@ -279,6 +294,47 @@ describe('website smoke test', () => {
     const creditLink = host.querySelector('.mwnf-source-credit a')
     expect(creditLink).not.toBeNull()
     expect(creditLink.textContent.startsWith(config.site.origin)).toBe(true)
+    app.unmount()
+  }, 30000)
+
+  // Theme 1's first sub-theme carries a same-node related pair (a picture
+  // whose curator-set "Related items" link names another picture curated
+  // under this very sub-theme): the target starts hidden from the strip
+  // behind "Add Related Works", and the source's selection shows the
+  // target's name/relation text in PictureNarrative's "Related" block.
+  it('shows a picture\'s related items and the "Add related works" toggle', async () => {
+    const { app, host } = await mountSite('#/theme/1/1/5')
+    await vi.waitFor(() => expect(host.querySelector('.mwnf-picture-narrative__related')).not.toBeNull(), { timeout: 20000 })
+
+    const toggle = host.querySelector('.mwnf-picture-gallery__toggle')
+    expect(toggle).not.toBeNull()
+    expect(toggle.textContent.trim()).toBe('Add Related Works')
+    // The related target (display_order 6) is a backRelated hit for this
+    // node's own strip, so it starts hidden: fewer thumbs than pictures.
+    expect(host.querySelectorAll('.mwnf-picture-gallery__thumb').length).toBeLessThan(13)
+
+    const related = host.querySelector('.mwnf-picture-narrative__related')
+    expect(related.textContent).toContain('Related')
+    expect(related.textContent).toContain('Saint Charles Borromeo Administers the Sacrament to the Plague-Infected')
+    expect(related.textContent).toContain('Similar colour scheme, as well as similar theme.')
+    app.unmount()
+  }, 30000)
+
+  // The epic's own fix (museumwithnofrontiers/inventory-app#1729): a related
+  // link whose target is curated under a DIFFERENT theme used to be silently
+  // dropped (the pre-migration `relatedTo` map was scoped to the current
+  // node only). useThemePictures.js resolves against the whole tree instead
+  // (`themes.js`'s `pictureById`), so the target still renders here, by name.
+  it('renders a related picture whose target lives in another theme', async () => {
+    const { app, host } = await mountSite('#/theme/0/overview/3')
+    await vi.waitFor(() => expect(host.querySelector('.mwnf-picture-narrative__related')).not.toBeNull(), { timeout: 20000 })
+
+    const related = host.querySelector('.mwnf-picture-narrative__related')
+    expect(related.textContent).toContain('Prayer rug')
+    expect(related.textContent).toContain('Similar decorative elements, as well as some colours.')
+    // The target is a real, selectable picture (a button, not dead text) —
+    // clicking it is how a visitor reaches it, same as any other related item.
+    expect(related.querySelector('button img')).not.toBeNull()
     app.unmount()
   }, 30000)
 
@@ -397,6 +453,12 @@ describe('website smoke test', () => {
     // `about` drops EssayView's own side column; the picture panel this
     // family otherwise shows has nothing to attach to on this page.
     expect(host.querySelector('.mwnf-essay__side')).toBeNull()
+    // `#after-body` itself is NOT part of that side column (EssayView renders
+    // it in the main article flow regardless of `about`), so Theme.vue's own
+    // `v-if="!aboutMode"` on PictureNarrative is what actually hides the
+    // narrative body here — asserted directly, not just inferred from the
+    // side column's absence.
+    expect(host.querySelector('.mwnf-picture-narrative')).toBeNull()
     expect(host.textContent).toContain(config.siteName)
     app.unmount()
   }, 30000)
