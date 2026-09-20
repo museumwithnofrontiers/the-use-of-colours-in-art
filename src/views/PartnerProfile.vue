@@ -4,8 +4,7 @@ import { RouterLink, useRoute } from 'vue-router'
 import { NotFoundView, useI18n } from '@museumwnf/viewer-core'
 import { BackLink, PartnerMap, RecordLanguages } from '@museumwnf/viewer-layout/content'
 import { RecordView } from '@museumwnf/viewer-layout/views'
-import { labelOf, md, partnerObjectsRoute, visiblePartnerById } from '../composables/useExhibitionData.js'
-import { partnerSheetSpec } from '../composables/partnerSpecs.js'
+import { labelOf, md, partnerObjectsRoute, visiblePartnerById, partnerSheetSpec } from '../composables/exhibitionData.js'
 
 // Legacy has two page templates for the same record — PartnerProfile for a
 // museum, InstitutionProfile for a monument's owning institution — because it

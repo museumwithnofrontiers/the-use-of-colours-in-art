@@ -3,8 +3,7 @@ import { RouterLink } from 'vue-router'
 import { I18nText } from '@museumwnf/viewer-core'
 import { PartnerListView } from '@museumwnf/viewer-layout/views'
 import { BackLink } from '@museumwnf/viewer-layout/content'
-import { partnerObjectsRoute } from '../composables/useExhibitionData.js'
-import { partnerListSpec } from '../composables/partnerSpecs.js'
+import { partnerObjectsRoute, partnerListSpec } from '../composables/exhibitionData.js'
 
 // The partners list, on the platform's composed list view: the country
 // grouping and the A–Z / Z–A toggle are `PartnerListView`'s, driven by

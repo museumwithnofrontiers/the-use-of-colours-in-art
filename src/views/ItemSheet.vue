@@ -9,9 +9,9 @@ import { RecordView } from '@museumwnf/viewer-layout/views'
 import {
   labelOf, partnerById, partnerRoute, dynastyById, translations, defaultLang, md, itemById,
   isHiddenPartner, isExploreRecord,
-} from '../composables/useExhibitionData.js'
-import { findEvents, eraLabel, roundOutward, timelineCountries, countryIdForCode, hasTimeline } from '../composables/useTimeline.js'
-import { itemSheet } from '../composables/sheet.js'
+  findEvents, eraLabel, roundOutward, timelineCountries, timelineCountryIdForCode as countryIdForCode, hasTimeline,
+  itemSheet,
+} from '../composables/exhibitionData.js'
 import { noticeProjects, projectColors } from '../dataset.config.js'
 
 // The item sheet is the platform's composed record page, rendering the spec

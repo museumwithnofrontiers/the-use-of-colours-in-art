@@ -3,7 +3,7 @@ import { LinkListView } from '@museumwnf/viewer-layout/views'
 import { useI18n } from '@museumwnf/viewer-core'
 import {
   relatedContent, chromeImage, countryLabelFromCode, mdStrip,
-} from '../composables/useExhibitionData.js'
+} from '../composables/exhibitionData.js'
 
 const { t, locale } = useI18n()
 

@@ -8,7 +8,7 @@ import {
   pictureById, romanFor, themeByRouteId, themeText, themeTree,
 } from '../composables/themes.js'
 import { pictureParent } from '../composables/useThemePresentation.js'
-import { tile } from '../composables/useCollection.js'
+import { tile } from '../composables/exhibitionData.js'
 
 const route = useRoute()
 const { t, locale } = useI18n()

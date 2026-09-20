@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { I18nText } from '@museumwnf/viewer-core'
 import { TimelineResultsView } from '@museumwnf/viewer-layout/views'
-import { timelineSpec } from '../composables/useTimeline.js'
+import { timelineSpec } from '../composables/exhibitionData.js'
 
 // Timeline entry form, on the platform's composed timeline view: what is
 // this exhibition's own — the local/country scope, the suppressed country

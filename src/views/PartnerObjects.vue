@@ -4,9 +4,8 @@ import { useRoute, RouterLink } from 'vue-router'
 import { BackLink, Pagination } from '@museumwnf/viewer-layout/content'
 import { CatalogueResultsView } from '@museumwnf/viewer-layout/views'
 import {
-  visiblePartnerById, partnerRoute, labelOf, tr, defaultLang,
-} from '../composables/useExhibitionData.js'
-import { PAGE_SIZE, tile } from '../composables/useCollection.js'
+  visiblePartnerById, partnerRoute, labelOf, tr, defaultLang, PAGE_SIZE, tile,
+} from '../composables/exhibitionData.js'
 
 // The member items one partner holds, on the platform's composed results
 // view. Legacy split this into PartnerObjects and InstitutionMonuments, one

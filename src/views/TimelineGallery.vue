@@ -1,7 +1,7 @@
 <script setup>
 import { CatalogueResultsView } from '@museumwnf/viewer-layout/views'
 import { BackLink } from '@museumwnf/viewer-layout/content'
-import { timelineGallerySpec } from '../composables/useTimeline.js'
+import { timelineGallerySpec } from '../composables/exhibitionData.js'
 
 // The member items whose dates overlap the timeline search's country and
 // period, on the platform's composed results page. Legacy asked `/items` for

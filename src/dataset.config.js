@@ -4,8 +4,7 @@ import {
 import { itemFromUidPath, partnerFromKey } from '@museumwnf/viewer-core/legacy'
 import { TextPageView } from '@museumwnf/viewer-layout/views'
 import SiteShell from './SiteShell.vue'
-import { countries, items, visiblePartners } from './composables/useExhibitionData.js'
-import { hasTimeline } from './composables/useTimeline.js'
+import { countries, items, visiblePartners, hasTimeline } from './composables/exhibitionData.js'
 import { creditsSpec } from './composables/textPageSpecs.js'
 
 // The whole declaration of this website. Before it mounts, the website reads
