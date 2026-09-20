@@ -4,9 +4,9 @@ import { useRouter, RouterLink } from 'vue-router'
 import { useI18n, yearBuckets } from '@museumwnf/viewer-core'
 import { BackLink, FacetSelect, FilterPanel, Pagination } from '@museumwnf/viewer-layout/content'
 import { CatalogueResultsView } from '@museumwnf/viewer-layout/views'
-import { labelOf, timelines } from '../composables/useExhibitionData.js'
-import { FACET_CATEGORIES, collectionResults, countryIdForCode, useFacetLabels } from '../composables/useCollection.js'
-import { hasTimeline } from '../composables/useTimeline.js'
+import {
+  labelOf, timelines, FACET_CATEGORIES, collectionResults, countryIdForCode, useFacetLabels, hasTimeline,
+} from '../composables/exhibitionData.js'
 
 // Results plus "filter further by", on the platform's composed results page:
 // the filters in the URL, the dependent options, the date rule, the tiles and

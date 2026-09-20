@@ -11,7 +11,7 @@ import { aboutSpec, themeNodeRoute, themeSpec } from '../composables/themeSpecs.
 import { pictureParent, itemDetailString } from '../composables/useThemePresentation.js'
 import {
   itemRoute, labelOf, tr, defaultLang, md, mdInline, exhibitionTitle, exhibitionSubtitle,
-} from '../composables/useExhibitionData.js'
+} from '../composables/exhibitionData.js'
 
 const { t, locale } = useI18n()
 

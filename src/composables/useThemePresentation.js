@@ -1,6 +1,6 @@
 import {
   itemById, labelOf, tr, defaultLang,
-} from './useExhibitionData.js'
+} from './exhibitionData.js'
 
 // Shared between the theme page and the theme gallery — what SectionCards'
 // `accordion` variant does not need `themeCover`/`pictureCaption`/`truncate`

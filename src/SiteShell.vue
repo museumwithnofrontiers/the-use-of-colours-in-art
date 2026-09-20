@@ -19,7 +19,7 @@ import { PopupLogo } from '@museumwnf/viewer-layout/content'
 import {
   exhibition, chromeImage, itemById, labelOf, md, tr, defaultLang,
   exhibitionTitle, exhibitionSubtitle, exhibitionHeadline, bannerCaption,
-} from './composables/useExhibitionData.js'
+} from './composables/exhibitionData.js'
 
 // `language`, `languages` and `update:language` are the shell contract of
 // viewer-core: the language the application is in, the languages it offers

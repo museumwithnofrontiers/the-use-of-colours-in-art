@@ -2,8 +2,7 @@
 import { computed } from 'vue'
 import { I18nText, useFacets } from '@museumwnf/viewer-core'
 import { SearchFormView } from '@museumwnf/viewer-layout/views'
-import { items } from '../composables/useExhibitionData.js'
-import { FACETS, FACET_CATEGORIES, FACET_LABEL_KEYS } from '../composables/useCollection.js'
+import { items, FACETS, FACET_CATEGORIES, FACET_LABEL_KEYS } from '../composables/exhibitionData.js'
 
 // The collection entrance, on the platform's composed search form
 // (`mode: 'facets'`): legacy's shape — one dropdown per facet, over the
