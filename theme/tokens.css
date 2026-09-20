@@ -204,4 +204,27 @@
   --mwnf-sponsors-group-gap: 0.5rem;
   --mwnf-sponsors-group-title-size: 0.75rem;
   --mwnf-sponsors-group-title-color: #000000;
+
+  /* ---------- DXA family pages (epic #1731) ---------- */
+  /* The look this exhibition's own (now-retired) Partners.vue/PartnerProfile
+     .vue/CollectionResults.vue set locally: link text in the site's blue,
+     page headings/tab labels in the site's black (not
+     @museumwnf/viewer-layout/dxa's own neutral #1c1c1c default), and the
+     grey band behind the profile's language row and the "timeline for this
+     search" box (--rule-grey, site.css). --mwnf-color-background/-muted/
+     -border already carry over unchanged from the Global block above. */
+  --mwnf-link-text: #0000ff;
+  --mwnf-dxa-heading-color: #000000;
+  --mwnf-dxa-band-background: #e0e0e0;
+
+  /* ---------- PartnerListView group heading (epic #1731) ---------- */
+  /* Partners.vue's own `:deep(.mwnf-partner-list__group-heading)` override
+     (20px bold black, a border under the group) is gone with the file;
+     these tokens keep the heading's own size/weight/colour. The border
+     itself moves from "under each country name" to "under each whole
+     group" — @museumwnf/viewer-layout/dxa's own `.mwnf-partner-list__group`
+     rule, not a per-site token — a minor, accepted layout change reported
+     alongside this story. */
+  --mwnf-partner-list-group-title-size: 1.25rem;
+  --mwnf-partner-list-group-title-color: #000000;
 }
