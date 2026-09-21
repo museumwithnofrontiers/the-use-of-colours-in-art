@@ -14,7 +14,7 @@
     "namespace": "colours"
   },
   "dependencies": {
-    "@museumwnf/the-use-of-colours-in-art-data": "^1.0.14",
+    "@museumwnf/the-use-of-colours-in-art-data": "^1.0.15",
     "@museumwnf/viewer-core": "^2.0.0",
     "@museumwnf/viewer-i18n": "^4.0.0",
     "@museumwnf/viewer-layout": "^2.15.1",
