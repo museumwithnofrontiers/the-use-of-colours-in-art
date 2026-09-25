@@ -227,4 +227,20 @@
      alongside this story. */
   --mwnf-partner-list-group-title-size: 1.25rem;
   --mwnf-partner-list-group-title-color: #000000;
+
+  /* ---------- The theme pages (@museumwnf/viewer-layout/dxa) ---------- */
+  /* Legacy's three theme colours, set in src/styles/site.css: the pages'
+     ground and text, the heading band and link hover, and the themes page's
+     left half. */
+  --mwnf-dxa-theme-background: var(--secondary-color);
+  --mwnf-dxa-theme-text: var(--secondary-text-color);
+  --mwnf-dxa-theme-contrast: var(--contrast-color);
+  --mwnf-dxa-theme-contrast-text: var(--contrast-text-color);
+  --mwnf-dxa-theme-main: var(--main-color);
+
+  /* ---------- The item page (@museumwnf/viewer-layout/dxa) ---------- */
+  /* Legacy's item page sat on the secondary colour, its sheet links in the
+     link colour. */
+  --mwnf-dxa-item-background: var(--secondary-color);
+  --mwnf-dxa-item-link: var(--link-blue);
 }

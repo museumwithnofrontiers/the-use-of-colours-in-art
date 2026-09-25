@@ -57,7 +57,7 @@ describe('website smoke test', () => {
     const { app, host } = await mountSite(`#/item/${item.id}`)
     await vi.waitFor(() => expect(host.querySelector('.mwnf-sheet__label')).not.toBeNull(), { timeout: 20000 })
     expect(host.querySelector('.mwnf-record')).not.toBeNull()
-    expect(host.querySelector('.languages')).not.toBeNull()
+    expect(host.querySelector('.mwnf-dxa-item__languages')).not.toBeNull()
     // RecordSheetView (viewer-layout 2.14.0) renders the related block under
     // its own `mwnf-sheet-related` class, and the source line under
     // `mwnf-sheet-source__line` — this site no longer wraps either in its
@@ -268,18 +268,17 @@ describe('website smoke test', () => {
     await vi.waitFor(() => expect(host.querySelector('.mwnf-essay')).not.toBeNull(), { timeout: 20000 })
     expect(host.querySelector('.mwnf-essay').className).not.toContain('mwnf-essay--about')
     // The Roman label sits beside the theme's own title, in the `#header` slot.
-    expect(host.querySelector('.theme-component-theme-title').textContent).toMatch(/[IVX]/)
+    expect(host.querySelector('.mwnf-dxa-theme__heading').textContent).toMatch(/[IVX]/)
     expect(host.querySelector('.mwnf-essay__side')).not.toBeNull()
     expect(host.querySelector('.mwnf-picture-gallery__selected, .mwnf-picture-gallery__empty')).not.toBeNull()
     expect(host.querySelector('.mwnf-essay__nav')).not.toBeNull()
     // The selected picture's own caption: its panel title is the parent
-    // record's label (composables/useThemePictures.js's `resolvePicture`),
+    // record's label (viewer-core/dxa's `useExhibitionThemes`),
     // not the theme node's own presentation text.
     expect(host.querySelector('.mwnf-picture-gallery__detail--title').textContent)
       .toContain('Church of St. Lourenço de Almancil')
-    // The sub-theme tab strip (`#navigation`, still this site's own — see
-    // themeSpecs.js's `numbering: false` comment).
-    const subNav = host.querySelector('.theme-component-link-navigation-container')
+    // The sub-theme list, in the family theme page's `#navigation`.
+    const subNav = host.querySelector('.mwnf-dxa-theme__subthemes')
     expect(subNav.textContent).toContain('The Basics – getting to know the Primary Colours')
     expect(subNav.textContent).toContain('Primary Colours in Architectural Monuments')
     // The view reads the theme texts through the tree's own entity, and a wrong

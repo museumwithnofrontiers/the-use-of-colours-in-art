@@ -1,7 +1,6 @@
 /*
  * Global styles shared by every view in this exhibition: the palette the views,
- * the shell and the layout's content classes reference, plus the one thing
- * this exhibition adds on top of them (the 'Explore' project chip, below).
+ * the shell and the layout's content classes reference.
  *
  * The building blocks themselves — panels, selects, buttons, prose, back
  * bars, loaders, the project chips proper — are viewer-layout's content
@@ -41,24 +40,6 @@
   --shadow-grey: #707070;
   --link-blue:   #0000ff;
   --rule-grey:   #e0e0e0;
-
-  /* Source-project accents — legacy's #info-citation-link colouring, one tone
-     per project family (which projects this exhibition borrows from is a
-     property of the export and moves with every reimport, so every family it
-     has ever borrowed from is declared, whether or not this build's own
-     `projectColors` map, dataset.config.js, still lists it). Epic #1727 phase
-     4: these no longer feed viewer-layout's shared `mwnf-chip--<family>`
-     classes through `--mwnf-project-*` tokens — this exhibition no longer
-     computes a "family" from a legacy project key at all, so it defines its
-     own `mwnf-chip--<name>` rules directly, below, instead. */
-  --dia-yellow:    #ffcc00;  /* Discover Islamic Art */
-  --dba-blue:      #001d66;  /* Discover Baroque Art */
-  --sh-red:        #900000;  /* Sharing History */
-  --dca-tan:       #6b612b;  /* Discover Carpet Art */
-  --dga-blue:      #0059bf;  /* Discover Glass Art */
-  --explore-green: #006950;  /* Explore monuments database (no project at all) */
-  --g-grey:        #263238;  /* MWNF Galleries */
-  --exhibitions:   #7f01d4;  /* This exhibition's own native project */
 
   /* The database half of this site — collection search and results, the item
      sheet, partners, the timeline — is the gallery client's, and carries
