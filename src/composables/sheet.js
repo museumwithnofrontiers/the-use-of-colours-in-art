@@ -106,7 +106,7 @@ export const itemSheet = {
         events: (countryCode) => findEvents({ countryCode, start: range[0], end: range[1] }),
         range,
         era: (year) => eraLabel(year, ctx.t),
-        searchTo: (countryCode, r) => ({ name: 'timeline-results', query: { c: countryCode, start: r[0], end: r[1] } }),
+        searchTo: (countryCode, r) => ({ name: 'timeline-results', query: { country: countryCode, begin: r[0], end: r[1] } }),
       }
     },
   },
