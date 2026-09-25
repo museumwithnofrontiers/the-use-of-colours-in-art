@@ -10,6 +10,6 @@ jobs:
     # not resolve, so npm ci cannot succeed here. Websites created from the
     # template have a different repository name and do run these checks.
     if: ${{ !endsWith(github.repository, '/website-template') }}
-    uses: museumwithnofrontiers/viewer-workflows/.github/workflows/website-ci.yml@v1.7.1
+    uses: museumwithnofrontiers/viewer-workflows/.github/workflows/website-ci.yml@v1.9.0
   locales:
-    uses: museumwithnofrontiers/viewer-workflows/.github/workflows/locale-validate.yml@v1.7.1
+    uses: museumwithnofrontiers/viewer-workflows/.github/workflows/locale-validate.yml@v1.9.0
