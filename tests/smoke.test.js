@@ -58,7 +58,7 @@ describe('website smoke test', () => {
     await vi.waitFor(() => expect(host.querySelector('.mwnf-sheet__label')).not.toBeNull(), { timeout: 20000 })
     expect(host.querySelector('.mwnf-record')).not.toBeNull()
     expect(host.querySelector('.mwnf-dxa-item__languages')).not.toBeNull()
-    // RecordSheetView (viewer-layout 2.14.0) renders the related block under
+    // ItemDetailView (@museumwnf/viewer-layout/dxa) renders the related block under
     // its own `mwnf-sheet-related` class, and the source line under
     // `mwnf-sheet-source__line` — this site no longer wraps either in its
     // own `related-content-container`/`source-reference` classes.
@@ -105,7 +105,7 @@ describe('website smoke test', () => {
       const { app, host } = await mountSite(`#/item/${item.id}`)
       await vi.waitFor(() => expect(host.querySelector('.mwnf-sheet-related')).not.toBeNull(), { timeout: 20000 })
 
-      // RecordSheetView's related-database/Artistic-Introduction lines carry
+      // ItemDetailView's related-database/Artistic-Introduction lines carry
       // no block class of their own (`mwnf-sheet-related__line` is shared by
       // several lines), so presence is asserted on the link's own href
       // instead — a stricter check than the old class-presence one, and one
