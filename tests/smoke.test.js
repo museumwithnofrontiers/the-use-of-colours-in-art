@@ -166,11 +166,11 @@ describe('website smoke test', () => {
     const { app, host } = await mountSite(`#/partner/${partner.id}`)
     await vi.waitFor(() => expect(host.querySelector('.mwnf-record')).not.toBeNull(), { timeout: 20000 })
     expect(host.textContent).toContain(partnerNamesEn[partner.id].name)
-    // The Description/Contact/Logo tab strip and the OpenStreetMap embed are
-    // this page's own slots — no local language switcher or lightbox
-    // remains. `#partner-links` is `.mwnf-dxa-profile-links` since epic
-    // #1731 (@museumwnf/viewer-layout/dxa's `ExhibitionPartnerProfile`).
-    expect(host.querySelector('.mwnf-dxa-profile-links')).not.toBeNull()
+    // The About/Contact/Logo tab strip and the OpenStreetMap embed. The strip
+    // is found by its role: viewer-layout's `PartnerPanel`
+    // (museumwithnofrontiers/inventory-app#2034) replaces the family page's
+    // own `.mwnf-dxa-profile-links`, and this test holds on both.
+    expect(host.querySelector('[role="tablist"], .mwnf-dxa-profile-links')).not.toBeNull()
     expect(host.querySelector('.mwnf-partner-map')).not.toBeNull()
     app.unmount()
   }, 30000)
