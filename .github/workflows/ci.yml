@@ -10,6 +10,15 @@ jobs:
     # not resolve, so npm ci cannot succeed here. Websites created from the
     # template have a different repository name and do run these checks.
     if: ${{ !endsWith(github.repository, '/website-template') }}
-    uses: museumwithnofrontiers/viewer-workflows/.github/workflows/website-ci.yml@v1.9.0
+    uses: museumwithnofrontiers/viewer-workflows/.github/workflows/website-ci.yml@v1.10.0
   locales:
-    uses: museumwithnofrontiers/viewer-workflows/.github/workflows/locale-validate.yml@v1.9.0
+    uses: museumwithnofrontiers/viewer-workflows/.github/workflows/locale-validate.yml@v1.10.0
+  # locales merges a green text-only PR with the workflow token, which starts
+  # no Deploy; this starts it once the merge lands.
+  deploy-texts:
+    needs: locales
+    if: needs.locales.outputs.locales_only == 'true'
+    permissions:
+      actions: write
+      pull-requests: read
+    uses: museumwithnofrontiers/viewer-workflows/.github/workflows/website-text-deploy.yml@v1.10.0
