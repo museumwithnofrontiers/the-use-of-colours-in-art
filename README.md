@@ -27,10 +27,9 @@ Nothing in this repository holds a token.
 | --- | --- |
 | `src/dataset.config.js` | this exhibition's own values: its package, name and address, the colour of each source project's chip, the projects whose sheets carry the Explore-partner notice, its credits text |
 | `src/main.js` | the entry point: the engine, the shared and own texts, the stylesheets |
-| `src/styles/site.css` | the palette the theme reads |
-| `theme/` | the visual identity: `tokens.css` (the normal surface), `overrides.css` (the escape hatch), `assets/` |
+| `theme/` | the visual identity: `tokens.css` (the palette, and anything that differs from the family's theme), `overrides.css` (the escape hatch), `assets/` |
 | `locales/` | this exhibition's own texts |
-| `tests/` | the smoke test, which mounts the whole website against its dataset |
+| `tests/` | the smoke test: the exhibition family's, run with this site's own records |
 
 A page that has to differ from the family's is this exhibition's own component,
 registered on the same route name as an override of what `exhibitionConfig`

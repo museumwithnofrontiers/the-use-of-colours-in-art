@@ -17,7 +17,7 @@
     "@museumwnf/the-use-of-colours-in-art-data": "^1.0.17",
     "@museumwnf/viewer-core": "^2.5.2",
     "@museumwnf/viewer-i18n": "^6.0.0",
-    "@museumwnf/viewer-layout": "^3.2.2",
+    "@museumwnf/viewer-layout": "^3.3.0",
     "vue": "^3.5.0",
     "vue-router": "^5.0.0"
   },

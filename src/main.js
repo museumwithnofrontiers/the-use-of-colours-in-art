@@ -1,9 +1,9 @@
 import { createStandardViewer } from '@museumwnf/viewer-core'
 import { catalogues as sharedTexts } from '@museumwnf/viewer-i18n/exhibition'
 import '@museumwnf/viewer-layout/style.css'
+import '@museumwnf/viewer-layout/dxa/exhibition.css'
 import '../theme/tokens.css'
 import '../theme/overrides.css'
-import './styles/site.css'
 import config from './dataset.config.js'
 
 // Every locales/<lang>.json holds this exhibition's own texts, and may overload
