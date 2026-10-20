@@ -26,6 +26,15 @@ export const noticeProjects = [
   '928f5e0d-53e3-5f53-b9c2-5af389c30dd4', // Explore Islamic Art Collections
 ]
 
+// This website's own chrome files (inventory-app#2233, D7): the logo, the
+// banners, the sibling-gallery tiles and the backgrounds, imported from the
+// legacy site into theme/assets/. A picture the package names by its legacy
+// path is the file at theme/assets/chrome/<that path>; the layout resolves
+// each through this map (@museumwnf/viewer-layout, "Site chrome").
+const chrome = import.meta.glob('../theme/assets/**/*.{jpg,jpeg,png,gif,svg}', {
+  eager: true, query: '?url', import: 'default',
+})
+
 export default exhibitionConfig({
   // The dataset package this website renders. Must match the alias in
   // vite.config.js and the dependency in package.json.
@@ -45,4 +54,7 @@ export default exhibitionConfig({
 
   // The credits page's body.
   creditsBody: 'colours.credits.body',
+
+  // This website's own chrome files, above.
+  chrome,
 })
