@@ -18,7 +18,7 @@
     "@museumwnf/viewer-core": "^2.8.0",
     "@museumwnf/viewer-i18n": "^6.1.0",
     "@museumwnf/viewer-layout": "^3.8.0",
-    "vue": "^3.5.0",
+    "vue": "^3.5.44",
     "vue-router": "^5.0.0"
   },
   "devDependencies": {
