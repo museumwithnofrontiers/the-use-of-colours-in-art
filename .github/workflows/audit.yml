@@ -9,5 +9,5 @@ permissions:
 jobs:
   audit:
     # Nothing to audit from the template itself - see ci.yml.
-    if: ${{ !endsWith(github.repository, '/website-template') }}
-    uses: museumwithnofrontiers/viewer-workflows/.github/workflows/audit-scheduled.yml@v1.10.0
+    if: ${{ !endsWith(github.repository, '/exhibition-template') }}
+    uses: museumwithnofrontiers/viewer-workflows/.github/workflows/audit-scheduled.yml@v1.13.0

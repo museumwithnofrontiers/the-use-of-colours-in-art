@@ -11,5 +11,5 @@ permissions:
 jobs:
   deploy:
     # Nothing to deploy from the template itself - see ci.yml.
-    if: ${{ !endsWith(github.repository, '/website-template') }}
-    uses: museumwithnofrontiers/viewer-workflows/.github/workflows/website-deploy-pages.yml@v1.10.0
+    if: ${{ !endsWith(github.repository, '/exhibition-template') }}
+    uses: museumwithnofrontiers/viewer-workflows/.github/workflows/website-deploy-pages.yml@v1.13.0
