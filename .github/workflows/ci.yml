@@ -8,11 +8,18 @@ jobs:
   ci:
     # The template itself has no lockfile and its __DATASET__ dependency does
     # not resolve, so npm ci cannot succeed here. Websites created from the
-    # template have a different repository name and do run these checks.
-    if: ${{ !endsWith(github.repository, '/website-template') }}
-    uses: museumwithnofrontiers/viewer-workflows/.github/workflows/website-ci.yml@v1.10.0
+    # template have a different repository name and do run these checks — where
+    # the preinstall check additionally fails the install if a placeholder was
+    # left behind in a file npm does not read.
+    if: ${{ !endsWith(github.repository, '/exhibition-template') }}
+    uses: museumwithnofrontiers/viewer-workflows/.github/workflows/website-ci.yml@v1.13.0
   locales:
-    uses: museumwithnofrontiers/viewer-workflows/.github/workflows/locale-validate.yml@v1.10.0
+    # Guarded like the rest since the texts gained placeholders of their own:
+    # __SITE_NAMESPACE__ is not a name, so the template's own locales/en.json
+    # cannot pass the check a real website has to pass. scripts/check-placeholders.js
+    # is what refuses a copy that still carries it.
+    if: ${{ !endsWith(github.repository, '/exhibition-template') }}
+    uses: museumwithnofrontiers/viewer-workflows/.github/workflows/locale-validate.yml@v1.13.0
   # locales merges a green text-only PR with the workflow token, which starts
   # no Deploy; this starts it once the merge lands.
   deploy-texts:
@@ -21,4 +28,4 @@ jobs:
     permissions:
       actions: write
       pull-requests: read
-    uses: museumwithnofrontiers/viewer-workflows/.github/workflows/website-text-deploy.yml@v1.10.0
+    uses: museumwithnofrontiers/viewer-workflows/.github/workflows/website-text-deploy.yml@v1.13.0
