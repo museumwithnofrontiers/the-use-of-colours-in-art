@@ -1,4 +1,5 @@
 import { exhibitionConfig } from '@museumwnf/viewer-layout/dxa'
+import sponsorLogos from './sponsor-logos.json'
 
 // The whole declaration of this website: a DXA exhibition, whose pages,
 // shell, menu, sponsor strip and legacy redirects are the family's
@@ -57,4 +58,10 @@ export default exhibitionConfig({
 
   // This website's own chrome files, above.
   chrome,
+
+  // The sponsors' logos, this website's own (inventory-app#2463): each file
+  // under theme/assets/chrome/, its caption in locales/, its link, banner
+  // slot (category 0 is the header) and order, as legacy's exhibition_logo
+  // rows set them (src/sponsor-logos.json).
+  sponsorLogos,
 })
