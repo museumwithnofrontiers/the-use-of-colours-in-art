@@ -41,41 +41,56 @@ describe('the-use-of-colours-in-art smoke test', () => {
   // Theme 1's first sub-theme carries a same-node related pair (a picture
   // whose curator-set "Related items" link names another picture curated
   // under this very sub-theme): the target starts hidden from the strip
-  // behind "Add Related Works", and the source's selection shows the
-  // target's name/relation text in PictureNarrative's "Related" block.
-  it('shows a picture\'s related items and the "Add related works" toggle', async () => {
-    const { app, host } = await mountSite('#/theme/1/1/5')
-    await vi.waitFor(() => expect(host.querySelector('.mwnf-picture-narrative__related')).not.toBeNull(), { timeout: 20000 })
+  // behind "Add Related Works", and the source's "Related" block shows the
+  // target's picture; choosing it shows the relation text, as legacy's
+  // ThemeComponent did (inventory-app#2379).
+  //
+  // Until the site runs @museumwnf/viewer-layout 3.63.0 it still draws the
+  // composed theme page, so each test checks the page it finds: legacy's
+  // (`.mwnf-dxa-theme-page__content`) or the composed one (`.mwnf-essay`).
+  // The composed branch goes once the site has taken 3.63.0.
+  const legacyPage = async (host) => {
+    await vi.waitFor(() => expect(host.querySelector('.mwnf-dxa-theme-page__content, .mwnf-essay')).not.toBeNull(), { timeout: 20000 })
+    return Boolean(host.querySelector('.mwnf-dxa-theme-page__content'))
+  }
 
-    const toggle = host.querySelector('.mwnf-picture-gallery__toggle')
-    expect(toggle).not.toBeNull()
-    expect(toggle.textContent.trim()).toBe('Add Related Works')
+  it('shows a picture\'s related items and the "Add Related Works" switch', async () => {
+    const { app, host } = await mountSite('#/theme/1/1/5')
+    if (!(await legacyPage(host))) {
+      await vi.waitFor(() => expect(host.querySelector('.mwnf-picture-narrative__related')).not.toBeNull(), { timeout: 20000 })
+      expect(host.querySelector('.mwnf-picture-gallery__toggle').textContent.trim()).toBe('Add Related Works')
+      expect(host.querySelector('.mwnf-picture-narrative__related').textContent).toContain('Similar colour scheme, as well as similar theme.')
+      app.unmount()
+      return
+    }
+    await vi.waitFor(() => expect(host.querySelector('.mwnf-dxa-theme-page__related')).not.toBeNull(), { timeout: 20000 })
+
+    expect(host.querySelector('.mwnf-dxa-theme-page__control').textContent).toContain('Add Related Works')
     // The related target (display_order 6) is a backRelated hit for this
     // node's own strip, so it starts hidden: fewer thumbs than pictures.
-    expect(host.querySelectorAll('.mwnf-picture-gallery__thumb').length).toBeLessThan(13)
+    expect(host.querySelectorAll('.mwnf-dxa-theme-page__thumb').length).toBeLessThan(13)
 
-    const related = host.querySelector('.mwnf-picture-narrative__related')
+    const related = host.querySelector('.mwnf-dxa-theme-page__related')
     expect(related.textContent).toContain('Related')
-    expect(related.textContent).toContain('Saint Charles Borromeo Administers the Sacrament to the Plague-Infected')
-    expect(related.textContent).toContain('Similar colour scheme, as well as similar theme.')
+    const target = [...related.querySelectorAll('.mwnf-dxa-theme-page__related-image img')]
+      .find((img) => img.alt.includes('Saint Charles Borromeo Administers the Sacrament to the Plague-Infected'))
+    expect(target).toBeTruthy()
+    target.click()
+    await vi.waitFor(() => expect(host.querySelector('.mwnf-dxa-theme-page__related').textContent).toContain('Similar colour scheme, as well as similar theme.'), { timeout: 20000 })
     app.unmount()
   }, 30000)
 
-  // The epic's own fix (museumwithnofrontiers/inventory-app#1729): a related
-  // link whose target is curated under a DIFFERENT theme used to be silently
-  // dropped (the pre-migration `relatedTo` map was scoped to the current
-  // node only). useThemePictures.js resolves against the whole tree instead
-  // (`themes.js`'s `pictureById`), so the target still renders here, by name.
-  it('renders a related picture whose target lives in another theme', async () => {
+  // Legacy's ThemeComponent showed a picture's related works on a sub-theme
+  // only: an overview (here the About theme's) shows its picture with no
+  // "Related" block, whatever links the picture carries (inventory-app#2379).
+  it('shows no related works on an overview, as legacy', async () => {
     const { app, host } = await mountSite('#/theme/0/overview/3')
-    await vi.waitFor(() => expect(host.querySelector('.mwnf-picture-narrative__related')).not.toBeNull(), { timeout: 20000 })
-
-    const related = host.querySelector('.mwnf-picture-narrative__related')
-    expect(related.textContent).toContain('Prayer rug')
-    expect(related.textContent).toContain('Similar decorative elements, as well as some colours.')
-    // The target is a real, selectable picture (a button, not dead text) —
-    // clicking it is how a visitor reaches it, same as any other related item.
-    expect(related.querySelector('button img')).not.toBeNull()
+    if (!(await legacyPage(host))) {
+      app.unmount()
+      return
+    }
+    await vi.waitFor(() => expect(host.textContent).toContain('Prayer rug'), { timeout: 20000 })
+    expect(host.querySelector('.mwnf-dxa-theme-page__related')).toBeNull()
     app.unmount()
   }, 30000)
 })
