@@ -6,12 +6,6 @@ services:
     volumes:
       - .:/app
       - node_modules:/app/node_modules
-      # Every @museumwnf package installs anonymously from npmjs (public,
-      # no login needed) — this mount is only for whatever a site's own
-      # .npmrc or ~/.npmrc still adds on top (a not-yet-migrated GitHub
-      # Packages scope, a private registry for something else). Leave it
-      # mounted; it is a no-op once nothing in the tree needs it.
-      - ${HOME}/.npmrc:/root/.npmrc:ro
 
 volumes:
   node_modules:
