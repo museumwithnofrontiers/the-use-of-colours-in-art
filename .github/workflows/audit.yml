@@ -10,4 +10,4 @@ jobs:
   audit:
     # Nothing to audit from the template itself - see ci.yml.
     if: ${{ !endsWith(github.repository, '/exhibition-template') }}
-    uses: museumwithnofrontiers/viewer-workflows/.github/workflows/audit-scheduled.yml@v1.13.0
+    uses: museumwithnofrontiers/viewer-workflows/.github/workflows/audit-scheduled.yml@v1.14.0
